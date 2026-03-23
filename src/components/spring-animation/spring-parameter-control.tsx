@@ -1,8 +1,10 @@
+import { Divider } from '@/components/divider';
 import { SPRING_PARAMS } from '@/constants/spring-params.ts';
 import { cn } from '@/utils/cn';
 import * as Label from '@radix-ui/react-label';
 import * as Slider from '@radix-ui/react-slider';
 import { FC } from 'react';
+import { DerivedSpringValues } from './derived-spring-values';
 
 /**
  * Props for SpringParameterControl component
@@ -15,6 +17,8 @@ export interface SpringParameterControlProps {
   onStiffnessChange: (values: number[]) => void;
   onDampingChange: (values: number[]) => void;
   onMassChange: (values: number[]) => void;
+  onOmegaChange?: (omega: number) => void;
+  onZetaChange?: (zeta: number) => void;
   onReset?: () => void;
 }
 
@@ -28,13 +32,15 @@ export const SpringParameterControl: FC<SpringParameterControlProps> = ({
   onStiffnessChange,
   onDampingChange,
   onMassChange,
+  onOmegaChange,
+  onZetaChange,
   onReset,
   className,
 }) => {
   return (
     <div className={cn('flex w-full flex-col gap-4', className)}>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="font-semibold">Spring Parameters</h3>
+      <div className="flex items-end justify-between">
+        <h4 className="text-sm font-medium text-gray-400">Spring Parameters</h4>
         {onReset && (
           <button
             onClick={onReset}
@@ -50,7 +56,9 @@ export const SpringParameterControl: FC<SpringParameterControlProps> = ({
 
       <div className="flex flex-col">
         <div className="flex justify-between text-sm font-medium">
-          <Label.Root>Stiffness: {stiffness}</Label.Root>
+          <Label.Root>
+            k (stiffness): <span className="font-mono">{stiffness.toFixed(2)}</span>
+          </Label.Root>
           <span className="text-xs text-gray-500">{SPRING_PARAMS.STIFFNESS.DESCRIPTION}</span>
         </div>
         <Slider.Root
@@ -75,7 +83,9 @@ export const SpringParameterControl: FC<SpringParameterControlProps> = ({
 
       <div className="flex flex-col">
         <div className="flex justify-between text-sm font-medium">
-          <Label.Root>Damping: {damping}</Label.Root>
+          <Label.Root>
+            c (damping): <span className="font-mono">{damping.toFixed(2)}</span>
+          </Label.Root>
           <span className="text-xs text-gray-500">{SPRING_PARAMS.DAMPING.DESCRIPTION}</span>
         </div>
         <Slider.Root
@@ -100,7 +110,9 @@ export const SpringParameterControl: FC<SpringParameterControlProps> = ({
 
       <div className="flex flex-col">
         <div className="flex justify-between text-sm font-medium">
-          <Label.Root>Mass: {mass.toFixed(1)}</Label.Root>
+          <Label.Root>
+            m (mass): <span className="font-mono">{mass.toFixed(1)}</span>
+          </Label.Root>
           <span className="text-xs text-gray-500">{SPRING_PARAMS.MASS.DESCRIPTION}</span>
         </div>
         <Slider.Root
@@ -122,6 +134,17 @@ export const SpringParameterControl: FC<SpringParameterControlProps> = ({
           />
         </Slider.Root>
       </div>
+
+      <Divider />
+
+      {/* Perceptual parameters (editable) */}
+      <DerivedSpringValues
+        stiffness={stiffness}
+        damping={damping}
+        mass={mass}
+        onOmegaChange={onOmegaChange}
+        onZetaChange={onZetaChange}
+      />
     </div>
   );
 };

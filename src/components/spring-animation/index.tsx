@@ -1,3 +1,4 @@
+import { Divider } from '@/components/divider';
 import { defaultSpringParams } from '@/config/spring-schema.ts';
 import { resetUrlParams } from '@/config/spring-url-params.ts';
 import {
@@ -12,6 +13,7 @@ import {
 import { useMediaQuery } from '@/hooks/use-media-query.ts';
 import { useStateWithRef } from '@/hooks/use-state-with-ref';
 import { useThrottledUrlUpdates } from '@/hooks/use-throttled-url-updates.ts';
+import { perceptualToPhysical } from '@/utils/spring-physics';
 import { animate } from 'popmotion';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useSpringConfig } from '../../hooks/use-spring-config.ts';
@@ -118,6 +120,34 @@ export const SpringAnimationDemo: FC = () => {
     }
   };
 
+  // Handle perceptual parameter changes (ω and ζ)
+  // When ω changes, keep ζ constant and update stiffness/damping
+  const handleOmegaChange = (newOmega: number) => {
+    // Calculate current ζ from current values
+    const currentOmega = Math.sqrt(stiffness / mass);
+    const currentZeta = damping / (2 * currentOmega * mass);
+
+    // Calculate new physical values with new ω but same ζ
+    const { stiffness: newStiffness, damping: newDamping } = perceptualToPhysical(newOmega, currentZeta, mass);
+
+    setStiffness(newStiffness);
+    setDamping(newDamping);
+    throttledUpdateStiffness(newStiffness);
+    throttledUpdateDamping(newDamping);
+  };
+
+  // When ζ changes, keep ω constant and update damping only
+  const handleZetaChange = (newZeta: number) => {
+    // Calculate current ω
+    const currentOmega = Math.sqrt(stiffness / mass);
+
+    // Only damping needs to change (stiffness determines ω)
+    const newDamping = newZeta * 2 * currentOmega * mass;
+
+    setDamping(newDamping);
+    throttledUpdateDamping(newDamping);
+  };
+
   // Render component
   return (
     <div
@@ -126,7 +156,7 @@ export const SpringAnimationDemo: FC = () => {
         md:rounded-lg md:bg-gray-800 md:p-6
       "
     >
-      <h2 className="text-2xl font-bold">Popmotion Spring Animation Demo</h2>
+      <h2 className="text-2xl font-bold">Spring Parameter Tuner</h2>
 
       <div className="flex w-full flex-col gap-6 pt-6">
         {/* Spring parameter sliders */}
@@ -137,8 +167,12 @@ export const SpringAnimationDemo: FC = () => {
           onStiffnessChange={handleStiffnessChange}
           onDampingChange={handleDampingChange}
           onMassChange={handleMassChange}
+          onOmegaChange={handleOmegaChange}
+          onZetaChange={handleZetaChange}
           onReset={handleReset}
         />
+
+        <Divider />
 
         {/* Axis and ball visualization */}
         <div className="flex w-full flex-col">

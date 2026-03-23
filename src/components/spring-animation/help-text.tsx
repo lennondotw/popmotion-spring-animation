@@ -6,7 +6,7 @@ import { FC } from 'react';
  */
 export const HelpText: FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className={cn('flex w-full flex-col gap-2 text-sm text-gray-400', className)}>
+    <div className={cn('flex w-full flex-col gap-2 text-xs text-gray-400', className)}>
       <p>Try adjusting parameters or clicking the area to set target values, observe animation effects.</p>
       <p>
         Higher stiffness makes animation faster, higher damping reduces oscillation, higher mass makes animation slower.

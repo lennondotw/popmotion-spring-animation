@@ -1,23 +1,38 @@
 export const SPRING_PARAMS = {
   STIFFNESS: {
-    MIN: 10,
-    MAX: 1000,
-    DEFAULT: 100,
+    MIN: 1,
+    MAX: 10000,
+    DEFAULT: 400,
     STEP: 1,
-    DESCRIPTION: 'Spring stiffness, affects animation speed and elasticity',
+    DESCRIPTION: 'Higher = faster oscillation, stronger restoring force',
   },
   DAMPING: {
-    MIN: 1,
-    MAX: 100,
-    DEFAULT: 10,
+    MIN: 2,
+    MAX: 400,
+    DEFAULT: 40,
     STEP: 1,
-    DESCRIPTION: 'Damping coefficient, controls spring deceleration',
+    DESCRIPTION: 'Higher = less bounce, faster settling',
   },
   MASS: {
     MIN: 0.1,
     MAX: 10,
     DEFAULT: 1.0,
     STEP: 0.1,
-    DESCRIPTION: 'Object mass, affects animation inertia',
+    DESCRIPTION: 'Higher = more inertia (redundant: normalizable to 1)',
+  },
+};
+
+export const PERCEPTUAL_PARAMS = {
+  OMEGA: {
+    MIN: 1,
+    MAX: 100,
+    STEP: 0.1,
+    DESCRIPTION: 'ω = √(k/m), controls animation speed',
+  },
+  ZETA: {
+    MIN: 0.01,
+    MAX: 2.0,
+    STEP: 0.01,
+    DESCRIPTION: '<1 bouncy, =1 critical, >1 sluggish',
   },
 };

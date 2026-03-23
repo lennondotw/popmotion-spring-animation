@@ -67,8 +67,12 @@ const eslintConfig = [
     rules: {
       ...reactPlugin.configs.recommended.rules,
       ...reactPlugin.configs['jsx-runtime'].rules,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      .../** @type { Record<string, unknown> } */ (reactHooksPlugin.configs['recommended-latest'].rules),
+
+      .../** @type { Record<string, unknown> } */ (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        /** @type { any } */ (reactHooksPlugin).configs['recommended-latest'].rules
+      ),
+
       ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
       'react/prop-types': 'off',
       'react/no-unescaped-entities': 'off',

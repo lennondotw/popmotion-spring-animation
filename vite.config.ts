@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/popmotion-spring-animation/',
+  base: '/spring-parameter-tuner/',
   resolve: {
     tsconfigPaths: true,
   },
