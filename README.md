@@ -1,39 +1,62 @@
-# React + TypeScript + Vite
+# Spring Parameter Tuner
 
-## Before using this template
+An interactive tool for tuning spring animation parameters. Adjust physical or perceptual values and instantly preview the animation behavior.
 
-Use `npm-check-updates` to update the dependencies to the latest versions.
+## Demo
 
-```bash
-pnpx dlx npm-check-updates -u
+Visit the live demo: https://lennondotw.github.io/spring-parameter-tuner/
+
+## Features
+
+- **Physical parameters**: stiffness, damping, mass
+- **Perceptual parameters**: natural frequency (ω), damping ratio (ζ)
+- Real-time animation preview
+- Shareable URL with parameters encoded
+- Preset values for quick testing
+
+## Spring Parameters Explained
+
+| Parameter         | Symbol | Effect                                                |
+| ----------------- | ------ | ----------------------------------------------------- |
+| Stiffness         | k      | Higher = faster oscillation, stronger restoring force |
+| Damping           | c      | Higher = less bounce, faster settling                 |
+| Mass              | m      | Higher = more inertia                                 |
+| Natural frequency | ω      | ω = √(k/m), controls animation speed                  |
+| Damping ratio     | ζ      | <1 bouncy, =1 critical, >1 overdamped                 |
+
+## Using with Animation Libraries
+
+The spring parameters from this tool can be directly applied to [Popmotion](https://popmotion.io/) and [Motion](https://motion.dev/) (formerly Framer Motion).
+
+**Popmotion**
+
+```ts
+import { animate } from 'popmotion';
+
+animate({
+  from: 0,
+  to: 100,
+  type: 'spring',
+  stiffness: 400,
+  damping: 40,
+  mass: 1,
+});
 ```
 
-Remove `pnpm-lock.yaml` from `.gitignore`.
+**Motion**
 
-## About this template
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```tsx
+<motion.div
+  animate={{ x: 100 }}
+  transition={{
+    type: 'spring',
+    stiffness: 400,
+    damping: 40,
+    mass: 1,
+  }}
+/>
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## License
+
+MIT
