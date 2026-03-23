@@ -1,4 +1,5 @@
 import { Divider } from '@/components/divider';
+import { Switch } from '@/components/switch';
 import { defaultSpringParams } from '@/config/spring-schema.ts';
 import { resetUrlParams } from '@/config/spring-url-params.ts';
 import {
@@ -13,6 +14,7 @@ import {
 import { useMediaQuery } from '@/hooks/use-media-query.ts';
 import { useStateWithRef } from '@/hooks/use-state-with-ref';
 import { useThrottledUrlUpdates } from '@/hooks/use-throttled-url-updates.ts';
+import { useVelocityTracker } from '@/hooks/use-velocity-tracker';
 import { perceptualToPhysical } from '@/utils/spring-physics';
 import { animate } from 'popmotion';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -35,6 +37,10 @@ export const SpringAnimationDemo: FC = () => {
   // Animation values - targetValue is not stored in URL
   const [targetValue, setTargetValue] = useState(DEFAULT_TARGET_VALUE);
   const [currentValue, setCurrentValue, latestCurrentValueRef] = useStateWithRef(DEFAULT_TARGET_VALUE);
+
+  // Velocity tracking
+  const [preserveVelocity, setPreserveVelocity] = useState(true);
+  const velocityTracker = useVelocityTracker();
 
   // Preset values array
   const isMdOrLarger = useMediaQuery('(width >= 48rem)');
@@ -72,6 +78,9 @@ export const SpringAnimationDemo: FC = () => {
       animationRef.current.stop();
     }
 
+    // Get current velocity before creating new animation
+    const initialVelocity = preserveVelocity ? velocityTracker.getVelocity() : 0;
+
     // Create new animation
     const animation = animate({
       from: latestCurrentValueRef.current,
@@ -80,12 +89,15 @@ export const SpringAnimationDemo: FC = () => {
       stiffness,
       damping,
       mass,
+      velocity: initialVelocity,
       restDelta: 0.001,
       restSpeed: 0.001,
       onUpdate: (value) => {
+        velocityTracker.track(value);
         setCurrentValue(value);
       },
       onComplete: () => {
+        velocityTracker.reset();
         setCurrentValue(targetValue);
       },
     });
@@ -96,7 +108,16 @@ export const SpringAnimationDemo: FC = () => {
     return () => {
       animation.stop();
     };
-  }, [damping, latestCurrentValueRef, mass, setCurrentValue, stiffness, targetValue]); // Only recreate animation when target value changes or spring parameters change
+  }, [
+    damping,
+    latestCurrentValueRef,
+    mass,
+    preserveVelocity,
+    setCurrentValue,
+    stiffness,
+    targetValue,
+    velocityTracker,
+  ]);
 
   // Handle slider value change
   const handleStiffnessChange = (values: number[]) => {
@@ -201,6 +222,16 @@ export const SpringAnimationDemo: FC = () => {
 
         {/* Real-time data input area */}
         <TargetValueSelector onTrackClick={handleTrackClick} />
+
+        <Divider />
+
+        {/* Velocity preservation toggle */}
+        <Switch
+          checked={preserveVelocity}
+          onCheckedChange={setPreserveVelocity}
+          label="Preserve velocity"
+          description="Keep current velocity when switching to a new target"
+        />
 
         <HelpText />
       </div>
