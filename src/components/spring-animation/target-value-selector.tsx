@@ -1,8 +1,9 @@
-import { cn } from '@/utils/cn';
-import { clamp } from '@/utils/math.ts';
+import { cn } from '#src/utils/cn.js';
+import { clamp } from '#src/utils/math.js';
 import * as Label from '@radix-ui/react-label';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FC, MouseEvent, useState } from 'react';
+import type { FC, MouseEvent } from 'react';
+import { useState } from 'react';
 
 /**
  * Marker data structure

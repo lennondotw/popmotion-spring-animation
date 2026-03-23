@@ -1,20 +1,10 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "target": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "noUncheckedIndexedAccess": true,
-    "useUnknownInCatchVariables": true,
     "types": ["node"],
-    "strict": true,
-    "allowJs": true,
-    "checkJs": true,
-    "outDir": "dist",
+    "rootDir": ".",
+    "outDir": "dist-ts/node",
+    "tsBuildInfoFile": "dist-ts/node/.tsbuildinfo",
   },
-  "include": ["./*.ts", "./.*.ts", "./*.js", "./.*.js", "./*.mjs", "./.*.mjs", "scripts"],
-  "exclude": ["src", "node_modules"],
+  "include": ["*.config.ts", "*.config.mts", "*.config.js", "*.config.mjs", ".prettierrc.mjs", "scripts"]
 }

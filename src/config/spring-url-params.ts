@@ -1,5 +1,6 @@
-import { entriesWithType } from '@/utils/typings.ts';
-import { defaultSpringParams, SpringParams, springParamsSchema } from './spring-schema.ts';
+import { entriesWithType } from '#src/utils/typings.js';
+import type { SpringParams } from './spring-schema.js';
+import { defaultSpringParams, springParamsSchema } from './spring-schema.js';
 
 export function resetUrlParams(): void {
   const url = new URL(window.location.href);

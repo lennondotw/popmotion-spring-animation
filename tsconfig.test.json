@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"],
+    "rootDir": ".",
+    "outDir": "dist-ts/test",
+    "tsBuildInfoFile": "dist-ts/test/.tsbuildinfo"
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test"],
+  "references": [{ "path": "./tsconfig.app.json" }]
+}

@@ -1,6 +1,7 @@
-import { MAX_MARK, MIN_MARK } from '@/constants/marks.ts';
-import { cn } from '@/utils/cn';
-import { FC, useEffect } from 'react';
+import { MAX_MARK, MIN_MARK } from '#src/constants/marks.js';
+import { cn } from '#src/utils/cn.js';
+import type { FC } from 'react';
+import { useEffect } from 'react';
 
 /**
  * Props for PresetValues component

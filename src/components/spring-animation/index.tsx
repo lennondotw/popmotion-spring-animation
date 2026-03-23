@@ -1,7 +1,7 @@
-import { Divider } from '@/components/divider';
-import { Switch } from '@/components/switch';
-import { defaultSpringParams } from '@/config/spring-schema.ts';
-import { resetUrlParams } from '@/config/spring-url-params.ts';
+import { Divider } from '#src/components/divider.js';
+import { Switch } from '#src/components/switch.js';
+import { defaultSpringParams } from '#src/config/spring-schema.js';
+import { resetUrlParams } from '#src/config/spring-url-params.js';
 import {
   DEFAULT_TARGET_VALUE,
   MAX_MARK,
@@ -10,21 +10,19 @@ import {
   PRESET_VALUES,
   SMALL_SCREEN_PRESET_SHORTCUTS,
   SMALL_SCREEN_PRESET_VALUES,
-} from '@/constants/marks.ts';
-import { useMediaQuery } from '@/hooks/use-media-query.ts';
-import { useStateWithRef } from '@/hooks/use-state-with-ref';
-import { useThrottledUrlUpdates } from '@/hooks/use-throttled-url-updates.ts';
-import { useVelocityTracker } from '@/hooks/use-velocity-tracker';
-import { perceptualToPhysical } from '@/utils/spring-physics';
-import { animate } from 'popmotion';
-import { FC, useEffect, useRef, useState } from 'react';
-import { useSpringConfig } from '../../hooks/use-spring-config.ts';
-import { AnimationVisualization } from './animation-visualization';
-import { HelpText } from './help-text';
-import { PresetValues } from './preset-values';
-import { SpringParameterControl } from './spring-parameter-control';
-import { TargetValueSelector } from './target-value-selector';
-import { AnimationControls } from './types.ts';
+} from '#src/constants/marks.js';
+import { useMediaQuery } from '#src/hooks/use-media-query.js';
+import { useSpringAnimation } from '#src/hooks/use-spring-animation.js';
+import { useSpringConfig } from '#src/hooks/use-spring-config.js';
+import { useThrottledUrlUpdates } from '#src/hooks/use-throttled-url-updates.js';
+import { perceptualToPhysical } from '#src/utils/spring-physics.js';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { AnimationVisualization } from './animation-visualization.js';
+import { HelpText } from './help-text.js';
+import { PresetValues } from './preset-values.js';
+import { SpringParameterControl } from './spring-parameter-control.js';
+import { TargetValueSelector } from './target-value-selector.js';
 
 /**
  * Main component for Spring Animation Demo
@@ -34,90 +32,39 @@ export const SpringAnimationDemo: FC = () => {
   const { stiffness, damping, mass, setStiffness, setDamping, setMass } = useSpringConfig();
   const { throttledUpdateStiffness, throttledUpdateDamping, throttledUpdateMass } = useThrottledUrlUpdates();
 
-  // Animation values - targetValue is not stored in URL
+  // Animation state
   const [targetValue, setTargetValue] = useState(DEFAULT_TARGET_VALUE);
-  const [currentValue, setCurrentValue, latestCurrentValueRef] = useStateWithRef(DEFAULT_TARGET_VALUE);
-
-  // Velocity tracking
   const [preserveVelocity, setPreserveVelocity] = useState(true);
-  const velocityTracker = useVelocityTracker();
 
-  // Preset values array
+  // Spring animation
+  const currentValue = useSpringAnimation({
+    targetValue,
+    stiffness,
+    damping,
+    mass,
+    preserveVelocity,
+    initialValue: DEFAULT_TARGET_VALUE,
+  });
+
+  // Responsive preset values
   const isMdOrLarger = useMediaQuery('(width >= 48rem)');
   const presetValues = isMdOrLarger ? PRESET_VALUES : SMALL_SCREEN_PRESET_VALUES;
   const presetShortcuts = isMdOrLarger ? PRESET_SHORTCUTS : SMALL_SCREEN_PRESET_SHORTCUTS;
 
-  // Refs
-  const animationRef = useRef<AnimationControls | null>(null);
-
-  // Handle track click
   const handleTrackClick = (percentage: number) => {
     setTargetValue(percentage * (MAX_MARK - MIN_MARK) + MIN_MARK);
   };
 
-  // Handle preset value click
   const handlePresetClick = (value: number) => {
     setTargetValue(value);
   };
 
-  // Handle reset button click
   const handleReset = () => {
-    // Reset URL parameters
     resetUrlParams();
-
-    // Reset state to default values
     setStiffness(defaultSpringParams.stiffness);
     setDamping(defaultSpringParams.damping);
     setMass(defaultSpringParams.mass);
   };
-
-  // Create new animation only when target value changes
-  useEffect(() => {
-    // Stop current running animation
-    if (animationRef.current) {
-      animationRef.current.stop();
-    }
-
-    // Get current velocity before creating new animation
-    const initialVelocity = preserveVelocity ? velocityTracker.getVelocity() : 0;
-
-    // Create new animation
-    const animation = animate({
-      from: latestCurrentValueRef.current,
-      to: targetValue,
-      type: 'spring',
-      stiffness,
-      damping,
-      mass,
-      velocity: initialVelocity,
-      restDelta: 0.001,
-      restSpeed: 0.001,
-      onUpdate: (value) => {
-        velocityTracker.track(value);
-        setCurrentValue(value);
-      },
-      onComplete: () => {
-        velocityTracker.reset();
-        setCurrentValue(targetValue);
-      },
-    });
-
-    animationRef.current = animation;
-
-    // Clean up when component unmounts
-    return () => {
-      animation.stop();
-    };
-  }, [
-    damping,
-    latestCurrentValueRef,
-    mass,
-    preserveVelocity,
-    setCurrentValue,
-    stiffness,
-    targetValue,
-    velocityTracker,
-  ]);
 
   // Handle slider value change
   const handleStiffnessChange = (values: number[]) => {

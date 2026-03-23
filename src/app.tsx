@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { SpringAnimationDemo } from './components/spring-animation/index';
+import type { FC } from 'react';
+import { SpringAnimationDemo } from './components/spring-animation/index.js';
 
 export const App: FC = () => {
   return (

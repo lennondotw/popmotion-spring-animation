@@ -47,3 +47,15 @@ export function physicalToPerceptual(
 export function calculateCriticalDamping(stiffness: number, mass: number): number {
   return 2 * Math.sqrt(stiffness * mass);
 }
+
+export type DampingType = 'underdamped' | 'critical' | 'overdamped';
+
+/**
+ * Determine damping type based on damping ratio (ζ)
+ * Uses epsilon for floating point comparison
+ */
+export function getDampingType(zeta: number, epsilon = 0.001): DampingType {
+  if (zeta < 1 - epsilon) return 'underdamped';
+  if (zeta > 1 + epsilon) return 'overdamped';
+  return 'critical';
+}

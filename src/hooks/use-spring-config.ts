@@ -1,5 +1,5 @@
-import { defaultSpringParams } from '@/config/spring-schema.ts';
-import { getSpringParamsFromUrlWithDefaultValues } from '@/config/spring-url-params';
+import { defaultSpringParams } from '#src/config/spring-schema.js';
+import { getSpringParamsFromUrlWithDefaultValues } from '#src/config/spring-url-params.js';
 import { useMemo, useState } from 'react';
 
 export const useSpringConfig = () => {

@@ -1,4 +1,4 @@
-import { SPRING_PARAMS } from '@/constants/spring-params.ts';
+import { SPRING_PARAMS } from '#src/constants/spring-params.js';
 import { z } from 'zod';
 
 // Define parameter schema (no min/max constraints to allow URL values outside slider range)

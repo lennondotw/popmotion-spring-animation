@@ -1,14 +1,13 @@
-import { updateUrlParams } from '@/config/spring-url-params.ts';
-import { URL_UPDATE_THROTTLE_MS } from '@/constants/throttle.ts';
-import { throttle } from 'lodash-es';
+import { updateUrlParams } from '#src/config/spring-url-params.js';
+import { URL_UPDATE_THROTTLE_MS } from '#src/constants/throttle.js';
+import { throttle } from 'es-toolkit';
 import { useEffect, useMemo } from 'react';
 
-export const useThrottledUrlUpdates = () => {
+export function useThrottledUrlUpdates() {
   const throttledUpdateStiffness = useMemo(
     () =>
       throttle((value: number) => updateUrlParams({ stiffness: value }), URL_UPDATE_THROTTLE_MS, {
-        leading: true,
-        trailing: true,
+        edges: ['leading', 'trailing'],
       }),
     []
   );
@@ -16,8 +15,7 @@ export const useThrottledUrlUpdates = () => {
   const throttledUpdateDamping = useMemo(
     () =>
       throttle((value: number) => updateUrlParams({ damping: value }), URL_UPDATE_THROTTLE_MS, {
-        leading: true,
-        trailing: true,
+        edges: ['leading', 'trailing'],
       }),
     []
   );
@@ -25,13 +23,11 @@ export const useThrottledUrlUpdates = () => {
   const throttledUpdateMass = useMemo(
     () =>
       throttle((value: number) => updateUrlParams({ mass: value }), URL_UPDATE_THROTTLE_MS, {
-        leading: true,
-        trailing: true,
+        edges: ['leading', 'trailing'],
       }),
     []
   );
 
-  // Cleanup throttled functions on unmount
   useEffect(() => {
     return () => {
       throttledUpdateStiffness.cancel();
@@ -41,4 +37,4 @@ export const useThrottledUrlUpdates = () => {
   }, [throttledUpdateStiffness, throttledUpdateDamping, throttledUpdateMass]);
 
   return { throttledUpdateStiffness, throttledUpdateDamping, throttledUpdateMass };
-};
+}

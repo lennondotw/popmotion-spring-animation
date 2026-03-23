@@ -1,17 +1,12 @@
-import { PERCEPTUAL_PARAMS } from '@/constants/spring-params.ts';
-import { cn } from '@/utils/cn';
+import { PERCEPTUAL_PARAMS } from '#src/constants/spring-params.js';
+import { cn } from '#src/utils/cn.js';
+import type { DampingType } from '#src/utils/spring-physics.js';
+import { calculateCriticalDamping, getDampingType, physicalToPerceptual } from '#src/utils/spring-physics.js';
 import * as Label from '@radix-ui/react-label';
 import * as Slider from '@radix-ui/react-slider';
-import { FC, useMemo } from 'react';
+import type { FC } from 'react';
+import { useMemo } from 'react';
 
-/**
- * Damping type classification
- */
-type DampingType = 'underdamped' | 'critical' | 'overdamped';
-
-/**
- * Derived spring parameters calculated from stiffness, damping, and mass
- */
 interface DerivedValues {
   omega: number;
   zeta: number;
@@ -19,21 +14,10 @@ interface DerivedValues {
   criticalDamping: number;
 }
 
-/**
- * Calculate derived spring parameters (physical → perceptual)
- */
 function calculateDerivedValues(stiffness: number, damping: number, mass: number): DerivedValues {
-  // Natural frequency ω = √(k / m)
-  const omega = Math.sqrt(stiffness / mass);
-
-  // Critical damping = 2 × √(k × m)
-  const criticalDamping = 2 * Math.sqrt(stiffness * mass);
-
-  // Damping ratio ζ = c / criticalDamping
-  const zeta = damping / criticalDamping;
-
-  // Damping type based on ζ
-  const dampingType: DampingType = zeta < 0.999 ? 'underdamped' : zeta > 1.001 ? 'overdamped' : 'critical';
+  const { omega, zeta } = physicalToPerceptual(stiffness, damping, mass);
+  const criticalDamping = calculateCriticalDamping(stiffness, mass);
+  const dampingType = getDampingType(zeta);
 
   return { omega, zeta, dampingType, criticalDamping };
 }

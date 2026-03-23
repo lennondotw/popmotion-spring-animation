@@ -18,7 +18,7 @@ const tailwindCssStylesheetPath = new URL('./src/global.css', import.meta.url);
  */
 const eslintConfig = [
   // Global ignores
-  { ignores: ['node_modules', 'dist'] },
+  { ignores: ['node_modules', 'dist', 'dist-ts', 'coverage'] },
   { linterOptions: { reportUnusedDisableDirectives: true } },
 
   // TypeScript parser for all files

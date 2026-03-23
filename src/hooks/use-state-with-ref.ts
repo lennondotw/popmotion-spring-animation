@@ -1,4 +1,5 @@
-import { Dispatch, RefObject, SetStateAction, useCallback, useRef, useState } from 'react';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export type ReadonlyRefObject<T> = Readonly<RefObject<T>>;
 

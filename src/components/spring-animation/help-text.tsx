@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn';
-import { FC } from 'react';
+import { cn } from '#src/utils/cn.js';
+import type { FC } from 'react';
 
 /**
  * Component for displaying help text and tips about spring animation

@@ -1,10 +1,10 @@
-import { Divider } from '@/components/divider';
-import { SPRING_PARAMS } from '@/constants/spring-params.ts';
-import { cn } from '@/utils/cn';
+import { Divider } from '#src/components/divider.js';
+import { SPRING_PARAMS } from '#src/constants/spring-params.js';
+import { cn } from '#src/utils/cn.js';
 import * as Label from '@radix-ui/react-label';
 import * as Slider from '@radix-ui/react-slider';
-import { FC } from 'react';
-import { DerivedSpringValues } from './derived-spring-values';
+import type { FC } from 'react';
+import { DerivedSpringValues } from './derived-spring-values.js';
 
 /**
  * Props for SpringParameterControl component

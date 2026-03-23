@@ -8,6 +8,7 @@ node_modules/
 
 # Build artifacts
 dist/
+dist-ts/
 dist-ssr/
 *.local
 
@@ -23,3 +24,6 @@ dist-ssr/
 # Sass module declaration files
 *.module.sass.d.ts
 *.module.scss.d.ts
+
+# Coverage
+coverage/

@@ -1,6 +1,6 @@
-import { MARKS, MAX_MARK, MIN_MARK } from '@/constants/marks.ts';
-import { cn } from '@/utils/cn';
-import { FC } from 'react';
+import { MARKS, MAX_MARK, MIN_MARK } from '#src/constants/marks.js';
+import { cn } from '#src/utils/cn.js';
+import type { FC } from 'react';
 
 /**
  * Props for AnimationVisualization component
